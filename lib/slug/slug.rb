@@ -28,7 +28,7 @@ module Slug
 
       validates                 self.slug_column, :presence => { :message => "cannot be blank. Is #{self.slug_source} sluggable?" }
       validates                 self.slug_column, :uniqueness => uniqueness_opts
-      validates                 self.slug_column, :format => { :with => /^[a-z0-9-]+$/, :message => "contains invalid characters. Only downcase letters, numbers, and '-' are allowed." }
+      validates                 self.slug_column, :format => { :with => /^[a-z0-9-_]+$/, :message => "contains invalid characters. Only downcase letters, numbers, and '-' are allowed." }
       before_validation :set_slug, :on => :create
     end
   end
@@ -78,7 +78,7 @@ module Slug
       s = ActiveSupport::Multibyte.proxy_class.new(self[self.slug_column]).normalize(:kc)
       s.downcase!
       s.strip!
-      s.gsub!(/[^a-z0-9\s-]/, '') # Remove non-word characters
+      s.gsub!(/[^a-z0-9\_\s-]/, '') # Remove non-word characters
       s.gsub!(/\s+/, '-')     # Convert whitespaces to dashes
       s.gsub!(/-\z/, '')      # Remove trailing dashes
       s.gsub!(/-+/, '-')      # get rid of double-dashes
